@@ -18,9 +18,9 @@ and consulting each other while you steer.
 
 <div align="center">
 
-### 🎬 [Watch the demo →](https://github.com/aliildan/brainstorming/blob/main/demo.webm)
+<img width="1877" height="947" alt="dad_joke" src="https://github.com/user-attachments/assets/56e08d71-d629-428d-8769-58084f2b0ec7" />
 
-<sub>Four agents debating, delegating and editing code in one shared terminal chat.</sub>
+<sub>Four agents make dad jokes in one shared terminal chat.</sub>
 
 </div>
 
