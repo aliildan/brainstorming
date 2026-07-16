@@ -37,7 +37,7 @@ export function demoAdapters(): FakeAdapter[] {
       ],
       defaultReply: "Give me a concrete task and I will do it.",
     }),
-    new FakeAdapter("gemini", {
+    new FakeAdapter("antigravity", {
       chunkDelayMs: 15,
       defaultReply: "Alternative view: consider the long-term client list before deciding.",
     }),

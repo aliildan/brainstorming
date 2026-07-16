@@ -2,6 +2,15 @@
 
 Status: approved 2026-07-16
 
+> **Roster update (2026-07-16, post-approval):** The fourth agent is now
+> **Antigravity CLI** instead of Gemini CLI. This changes only which adapter
+> gets built in the adapters phase; the kernel, TUI, and `AgentAdapter`
+> interface are vendor-agnostic and unaffected. The Gemini ACP research below
+> is retained as reference. **Open item for the adapters phase:** research
+> Antigravity CLI's integration surface (does it speak ACP / stream-json /
+> another protocol?) before implementing its adapter — see the note in the
+> Gemini section.
+
 ## Purpose
 
 A terminal chat application where multiple AI coding agents — Claude Code, OpenAI Codex, Gemini CLI, and Ollama cloud models — participate in **one shared conversation** over a real codebase. All participants share context (messages, decisions), can give opinions simultaneously, can be delegated real work via @-mentions ("@codex you do this part"), and can consult each other. The human orchestrates; agents collaborate.

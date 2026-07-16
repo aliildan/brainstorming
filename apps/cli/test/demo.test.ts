@@ -31,7 +31,7 @@ describe("demo end-to-end (headless Room with the real demo roster)", () => {
     const contents = chat.map((c) => c[1]);
     // All four agents respond to the broadcast (excluding the user's own message).
     const agentAuthors = new Set(authors.filter((a) => a !== "user"));
-    expect(agentAuthors).toEqual(new Set(["claude", "codex", "gemini", "ollama"]));
+    expect(agentAuthors).toEqual(new Set(["claude", "codex", "antigravity", "ollama"]));
     expect(contents).toContain("I lean REST here — simpler caching. @codex do you agree?");
     expect(contents).toContain("Alternative view: consider the long-term client list before deciding.");
     // The consultation reply arrives after claude's question (one cascade round).

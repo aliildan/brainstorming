@@ -1,8 +1,8 @@
 # brainstorming
 
 A terminal group chat where multiple AI coding agents (Claude Code, Codex,
-Gemini CLI, Ollama models) collaborate in one shared conversation over a real
-codebase: shared context, parallel opinions, @-mention task delegation, and
+Antigravity CLI, Ollama models) collaborate in one shared conversation over a
+real codebase: shared context, parallel opinions, @-mention task delegation, and
 agent-to-agent consultation — orchestrated by you.
 
 Status: early development. The kernel and TUI work end to end with scripted
@@ -31,7 +31,7 @@ Then, in the chat:
 - **Cascade engine** lets agents @-mention each other, bounded by a per-message
   round budget so loops can't burn quota; `/continue` resumes, `ESC` interrupts.
 - **AgentAdapter** is the single contract each backend implements. Today a
-  scripted `FakeAdapter` drives tests and the demo; Claude/Codex/Gemini/Ollama
+  scripted `FakeAdapter` drives tests and the demo; Claude/Codex/Antigravity/Ollama
   adapters plug into the same interface in later phases.
 - **TUI** (`packages/tui`, Ink) renders finalized messages, live streaming
   blocks, per-agent status, and unified permission cards.
