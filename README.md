@@ -1,47 +1,133 @@
-# brainstorming
+<div align="center">
 
-A terminal group chat where multiple AI coding agents (Claude Code, Codex,
-Antigravity CLI, Ollama models) collaborate in one shared conversation over a
-real codebase: shared context, parallel opinions, @-mention task delegation, and
-agent-to-agent consultation — orchestrated by you.
+<img src="https://raw.githubusercontent.com/aliildan/brainstorming/main/logo.png" alt="brainstorming" width="360" />
 
-Status: early development. The kernel and TUI work end to end with scripted
-fake agents; real agent adapters are being added phase by phase.
+### One terminal. Every AI coding agent. Same conversation.
 
-## Try the demo (no AI quota used)
+**brainstorming** is a TUI where Claude Code, OpenAI Codex, Google Antigravity and Ollama models
+sit in **one shared chat** over your codebase — trading opinions, taking on tasks you @-mention,
+and consulting each other while you steer.
+
+[![npm](https://img.shields.io/npm/v/brainstorming.svg)](https://www.npmjs.com/package/brainstorming)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![node](https://img.shields.io/badge/node-%E2%89%A520-brightgreen.svg)](https://nodejs.org)
+
+</div>
+
+---
+
+## Why
+
+You already pay for Claude, ChatGPT/Codex, Gemini/Antigravity and run Ollama. But they each live in
+their own window, blind to each other. So you become a human clipboard — pasting Claude's plan into
+Codex, Codex's diff into Gemini, and back again, at 3AM.
+
+<div align="center">
+<img src="https://raw.githubusercontent.com/aliildan/brainstorming/main/brainstroming_meme.png" alt="Developers with AI at 3AM" width="320" />
+</div>
+
+**brainstorming** puts them in the same room. One shared transcript is the source of truth. Everyone
+sees every message and decision. You @-mention who should act, they can @-mention each other to
+consult, and the whole group converges — with you holding the remote.
+
+## Features
+
+- **One shared conversation** — every agent reads the same transcript, so context is never re-pasted.
+- **@-mention routing** — `@codex build the parser`, `@all what do you think?`, or just keep talking to whoever answered last (sticky targets).
+- **Agent-to-agent consultation** — an agent can `@claude` another for a second opinion, bounded by a per-message **round budget** so loops can't burn your quota. Out of budget? `/continue` or let it rest.
+- **Real work, with your approval** — Claude and Codex tool actions surface as a single **permission card** in the TUI; you press `i` / `o` / `r` to allow / allow-for-session / deny.
+- **Persistent & resumable** — the transcript and each backend's native session are saved under `.brainstorming/`; reopen the room and everyone remembers.
+- **Uses your existing logins** — no API keys. It drives the CLIs/SDKs you're already signed into.
+- **`/decide`** — record a group decision to `DECISIONS.md`; it's surfaced to every agent afterwards.
+- **Try it free** — `--demo` runs the whole experience with scripted agents and zero quota.
+
+## Install
 
 ```bash
-pnpm install
-pnpm demo
+npm install -g brainstorming
 ```
 
-Then, in the chat:
+**Prerequisites** — install and sign into the agents you want in the room (each optional; enable/disable in config):
 
-- `@all which API style should we use?` — parallel opinions; claude consults codex automatically
-- `@claude pingpong` — watch the round budget stop an infinite agent loop, then `/continue`
-- `@codex run the tests` — a permission card appears; press `i` (allow), `o` (allow for session) or `r` (deny)
-- `/help` — command list; `ESC` interrupts a running cascade; `/quit` exits
+| Agent | CLI / backend | Sign in with |
+| --- | --- | --- |
+| `@claude` | [`claude`](https://claude.com/claude-code) (Claude Agent SDK) | `claude` → `/login` (Pro/Max subscription) |
+| `@codex` | [`codex`](https://developers.openai.com/codex) (`codex app-server`) | `codex login` (ChatGPT subscription) |
+| `@antigravity` | [`agy`](https://antigravity.google) (Antigravity CLI) | Google sign-in on first run |
+| `@ollama` | [`ollama`](https://ollama.com) (local or `*-cloud` models) | `ollama signin` for cloud models |
+
+Node ≥ 20 required. No `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` needed — subscriptions are used.
+
+## Quick start
+
+```bash
+cd your-project        # a git repo (Codex needs one)
+brainstorming          # opens the shared chat in the current directory
+```
+
+Try it with no setup and no quota:
+
+```bash
+brainstorming --demo
+```
+
+In the chat:
+
+- `@all which API style should we use?` — everyone weighs in; Claude may consult Codex automatically.
+- `@codex scaffold the endpoints` — delegate real work; approve its edits from the permission card.
+- `@claude pingpong` (demo) — watch the round budget stop an infinite agent loop, then `/continue`.
+- `/decide use versioned REST + OpenAPI` — record the call to `DECISIONS.md`.
+- `/help` for all commands · `Tab` to autocomplete `@names` · `Esc` to interrupt · `/quit` to exit.
 
 ## How it works
 
-- **Transcript** (`packages/core`) is the append-only source of truth; every
-  agent is briefed from it, so any participant can be restarted and re-briefed.
-- **Router** delivers to `@mentioned` agents, falls back to the previous
-  (sticky) targets, and expands `@all` to everyone.
-- **Cascade engine** lets agents @-mention each other, bounded by a per-message
-  round budget so loops can't burn quota; `/continue` resumes, `ESC` interrupts.
-- **AgentAdapter** is the single contract each backend implements. Today a
-  scripted `FakeAdapter` drives tests and the demo; Claude/Codex/Antigravity/Ollama
-  adapters plug into the same interface in later phases.
-- **TUI** (`packages/tui`, Ink) renders finalized messages, live streaming
-  blocks, per-agent status, and unified permission cards.
+```
+        ┌──────────────── brainstorming (Ink TUI) ────────────────┐
+        │   shared transcript  ·  router  ·  round-budget engine   │
+        └───────────────────────────┬─────────────────────────────┘
+                    one common AgentAdapter interface
+        ┌───────────┬───────────────┼───────────────┬─────────────┐
+     Claude       Codex         Antigravity        Ollama
+  agent-sdk    app-server         agy CLI        /api/chat
+  (resume)   (JSON-RPC/stdio)  (stream-json)   (client history)
+```
+
+- The **transcript** (`.brainstorming/room.jsonl`) is the single source of truth; every agent is briefed from it, so any one can be restarted and re-briefed.
+- The **router** delivers each message to its `@mentioned` targets (or the previous ones), and `@all` fans out in parallel.
+- The **cascade engine** lets agents mention each other, bounded by the round budget, with `/continue` and `Esc` in your hands.
+- Each agent is a thin **adapter** behind one interface — streaming text, tool activity, permission requests, and session resume — so new backends slot in without touching the core.
+
+## Configuration
+
+A config file is created on first run at `~/.config/brainstorming/config.json`:
+
+```json
+{
+  "roundBudget": 3,
+  "agents": {
+    "claude":      { "enabled": true },
+    "codex":       { "enabled": true },
+    "antigravity": { "enabled": true },
+    "ollama":      { "enabled": true, "model": "qwen3.5:cloud" }
+  }
+}
+```
+
+Disable an agent with `"enabled": false`, pin a `model`, or add `personaExtra` to shape how one behaves in the room. If Ollama has no `model`, brainstorming auto-picks an available `*-cloud` model.
 
 ## Development
 
 ```bash
-pnpm test        # vitest unit + end-to-end tests
-pnpm typecheck   # strict TypeScript
+git clone https://github.com/aliildan/brainstorming.git
+cd brainstorming
+pnpm install
+pnpm test        # unit + end-to-end tests (no quota)
+pnpm typecheck
+pnpm demo        # run the demo from source
 ```
 
-Design docs live in `docs/superpowers/specs/` and plans in
-`docs/superpowers/plans/`.
+Monorepo layout: `packages/core` (kernel), `packages/adapters` (per-agent backends), `packages/tui` (Ink UI), `apps/cli` (the `brainstorming` binary).
+
+## License
+
+MIT © Ali Ildan
