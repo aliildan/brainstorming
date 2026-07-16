@@ -2,14 +2,34 @@
 
 Status: approved 2026-07-16
 
-> **Roster update (2026-07-16, post-approval):** The fourth agent is now
-> **Antigravity CLI** instead of Gemini CLI. This changes only which adapter
-> gets built in the adapters phase; the kernel, TUI, and `AgentAdapter`
-> interface are vendor-agnostic and unaffected. The Gemini ACP research below
-> is retained as reference. **Open item for the adapters phase:** research
-> Antigravity CLI's integration surface (does it speak ACP / stream-json /
-> another protocol?) before implementing its adapter — see the note in the
-> Gemini section.
+> **Roster update (2026-07-16, post-approval):** The fourth agent is
+> **Antigravity CLI** (`agy`) instead of Gemini CLI. The kernel, TUI, and
+> `AgentAdapter` interface are vendor-agnostic and unaffected; the Gemini ACP
+> research below is retained as reference only.
+>
+> **Antigravity integration — VERIFIED against `agy` v1.1.3 (implemented in
+> `packages/adapters/src/antigravity.ts`):** no ACP/app-server/JSON-RPC; drive
+> it per turn as `agy --output-format stream-json --model "<exact display
+> string>" --add-dir <ws> --mode accept-edits [--conversation <id>] -p
+> "<prompt>"`. Critical detail (empirically found; some web/research claims were
+> wrong): `-p`/`--print` is a **string flag whose value is the prompt** — the
+> prompt must be `-p`'s value, never a trailing positional, or `--print`
+> swallows the next flag. Stream-json emits `init` (carries `conversation_id`),
+> `step_update` (`step_type: agent_response` with `text_delta`; `tool_call`),
+> and `result` (`status: SUCCESS|ERROR|CANCELLED`, `response`, `usage`).
+> Statefulness: capture the **server-assigned** `conversation_id` from turn 1
+> (caller-supplied ids are ignored) and replay it via `--conversation` — history
+> persists in agy's on-disk SQLite, so only the per-turn digest is sent each
+> turn (verified: planted a secret on turn 1, recalled it on turn 2). Auth =
+> Google OAuth already cached under `~/.gemini/`. Persona: no system-prompt
+> flag; sent as a first-turn preamble (persists in the conversation). Models via
+> `agy models` (incl. Gemini 3.x, Claude Sonnet/Opus 4.6, GPT-OSS). Permissions:
+> agy has **no interactive permission event on the JSON stream**, so a chat
+> participant runs in a preset mode (`accept-edits` default / `sandbox-auto` /
+> `plan`) rather than routing to the TUI permission card — a known asymmetry vs
+> Claude/Codex; a `PreToolUse` hook bridge is possible future work. Interactive
+> mode needs a real TTY and cannot be driven headless — always per-turn
+> `--print`.
 
 ## Purpose
 
