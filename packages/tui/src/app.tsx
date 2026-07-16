@@ -9,7 +9,15 @@ import { ChatInput } from "./components/chat-input.js";
 import { PermissionCard } from "./components/permission-card.js";
 import { HELP_TEXT, parseCommand } from "./commands.js";
 
-export function App({ room, title = "brainstorming" }: { room: Room; title?: string }) {
+export function App({
+  room,
+  title = "brainstorming",
+  onDecide,
+}: {
+  room: Room;
+  title?: string;
+  onDecide?: (text: string) => void;
+}) {
   const view = useRoom(room);
   const { exit } = useApp();
   const [localNotice, setLocalNotice] = useState<string | null>(null);
@@ -51,6 +59,11 @@ export function App({ room, title = "brainstorming" }: { room: Room; title?: str
         case "continue":
           void room.continueCascade();
           return;
+        case "decide":
+          room.note(`DECISION: ${cmd.text}`);
+          onDecide?.(cmd.text);
+          setLocalNotice(`decision recorded: ${cmd.text}`);
+          return;
         case "unknown":
           setLocalNotice(`unknown command: /${cmd.name} — ${HELP_TEXT}`);
           return;
@@ -62,7 +75,7 @@ export function App({ room, title = "brainstorming" }: { room: Room; title?: str
           });
       }
     },
-    [room, exit],
+    [room, exit, onDecide],
   );
 
   const notice = localNotice ?? view.notice;

@@ -4,4 +4,6 @@ export * from "./transcript.js";
 export * from "./router.js";
 export * from "./prompt.js";
 export * from "./fake-adapter.js";
+export * from "./persona.js";
 export * from "./room.js";
+export * from "./room-store.js";

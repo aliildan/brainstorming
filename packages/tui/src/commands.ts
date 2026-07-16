@@ -3,6 +3,7 @@ export type Command =
   | { kind: "quit" }
   | { kind: "continue" }
   | { kind: "budget"; n: number }
+  | { kind: "decide"; text: string }
   | { kind: "help" }
   | { kind: "unknown"; name: string };
 
@@ -16,6 +17,11 @@ export function parseCommand(line: string): Command {
       return { kind: "continue" };
     case "help":
       return { kind: "help" };
+    case "decide": {
+      const text = rest.join(" ").trim();
+      if (text) return { kind: "decide", text };
+      return { kind: "unknown", name: "decide" };
+    }
     case "budget": {
       const n = Number(rest[0]);
       if (Number.isInteger(n) && n > 0) return { kind: "budget", n };
@@ -27,4 +33,4 @@ export function parseCommand(line: string): Command {
 }
 
 export const HELP_TEXT =
-  "commands: /continue /budget N /help /quit — mention with @name or @all; ESC interrupts";
+  "commands: /decide <text> /continue /budget N /help /quit — mention with @name or @all; ESC interrupts";

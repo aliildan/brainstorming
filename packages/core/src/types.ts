@@ -65,6 +65,11 @@ export interface AdapterContext {
   persona: string;
   /** Native session/thread id saved in room.json, when resuming. */
   savedSessionId?: string;
+  /**
+   * Prior transcript when resuming a room. Client-managed adapters (e.g. Ollama)
+   * rebuild their history from this; server-session adapters ignore it.
+   */
+  transcript?: readonly ChatMessage[];
 }
 
 export interface AgentAdapter {

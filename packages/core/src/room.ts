@@ -78,6 +78,16 @@ export class Room {
     this.#roundBudget = n;
   }
 
+  /**
+   * Mark the entire current transcript as already seen by every agent.
+   * Used when resuming a room so agents receive only NEW messages as digests
+   * (their pre-resume context comes from their backend session or ctx.transcript).
+   */
+  markAllSeen(): void {
+    const n = this.#transcript.length;
+    for (const name of this.#adapters.keys()) this.#cursors.set(name, n);
+  }
+
   on(fn: (ev: RoomEvent) => void): () => void {
     this.#listeners.add(fn);
     return () => this.#listeners.delete(fn);
@@ -106,6 +116,11 @@ export class Room {
 
   interrupt(): void {
     this.#abort?.abort();
+  }
+
+  /** Append a system note to the transcript (e.g. a recorded decision). */
+  note(content: string): ChatMessage {
+    return this.#append("system", content, "system", []);
   }
 
   #emit(ev: RoomEvent): void {
@@ -179,7 +194,13 @@ export class Room {
     const cursor = this.#cursors.get(agentName) ?? 0;
     const digest = snapshot
       .slice(cursor)
-      .filter((m) => m.id !== addressed.id && m.author !== agentName);
+      .filter(
+        (m) =>
+          m.id !== addressed.id &&
+          m.author !== agentName &&
+          m.kind !== "activity" &&
+          m.kind !== "permission",
+      );
     this.#cursors.set(agentName, snapshot.length);
 
     this.#status(agentName, "thinking");
