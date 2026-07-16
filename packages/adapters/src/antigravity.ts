@@ -1,5 +1,6 @@
 import { spawn as nodeSpawn } from "node:child_process";
 import readline from "node:readline";
+import { Readable } from "node:stream";
 import {
   renderPrompt,
   type AdapterContext,
@@ -88,15 +89,18 @@ export class AntigravityAdapter implements AgentAdapter {
   }
 
   #defaultSpawn: SpawnAgy = (args, opts) => {
+    // stderr is discarded, not surfaced: agy logs there and inheriting/printing
+    // it would corrupt the Ink TUI. Real failures arrive as `result` events with
+    // status ERROR on stdout, or a non-zero exit handled by the reader.
     const child = nodeSpawn(this.#bin, args, {
       cwd: opts.cwd,
-      stdio: ["ignore", "pipe", "pipe"],
+      stdio: ["ignore", "pipe", "ignore"],
       env: process.env,
     });
-    if (!child.stdout || !child.stderr) throw new Error("agy: stdout/stderr pipes unavailable");
+    if (!child.stdout) throw new Error("agy: stdout pipe unavailable");
     return {
       stdout: child.stdout,
-      stderr: child.stderr,
+      stderr: child.stderr ?? new Readable({ read() {} }),
       on: (event, listener) => child.on(event, listener),
       kill: (signal) => void child.kill(signal),
     };

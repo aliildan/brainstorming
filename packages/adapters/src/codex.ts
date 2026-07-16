@@ -85,7 +85,10 @@ export class CodexAdapter implements AgentAdapter {
   }
 
   #defaultConnect: CodexConnect = ({ cwd }) => {
-    const child = spawn(this.#bin, ["app-server"], { cwd, stdio: ["pipe", "pipe", "inherit"], env: process.env });
+    // stderr is discarded, not inherited: codex prints sandbox/config warnings
+    // there and inheriting them corrupts the Ink TUI. Errors still arrive as
+    // JSON-RPC error/result messages on stdout.
+    const child = spawn(this.#bin, ["app-server"], { cwd, stdio: ["pipe", "pipe", "ignore"], env: process.env });
     const rl = readline.createInterface({ input: child.stdout! });
     return {
       send: (message) => child.stdin!.write(JSON.stringify(message) + "\n"),
