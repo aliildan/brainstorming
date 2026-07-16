@@ -1,11 +1,19 @@
 {
   "name": "brainstorming",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A terminal group chat where Claude Code, Codex, Antigravity and Ollama collaborate in one shared conversation over your codebase.",
   "type": "module",
-  "bin": { "brainstorming": "./dist/index.js" },
-  "files": ["dist", "README.md", "LICENSE"],
-  "engines": { "node": ">=20" },
+  "bin": {
+    "brainstorming": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "demo": "tsx src/index.ts --demo",
     "start": "tsx src/index.ts",
@@ -41,8 +49,15 @@
   ],
   "author": "aliildan",
   "license": "MIT",
-  "repository": { "type": "git", "url": "git+https://github.com/aliildan/brainstorming.git" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aliildan/brainstorming.git"
+  },
   "homepage": "https://github.com/aliildan/brainstorming#readme",
-  "bugs": { "url": "https://github.com/aliildan/brainstorming/issues" },
-  "publishConfig": { "access": "public" }
+  "bugs": {
+    "url": "https://github.com/aliildan/brainstorming/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
