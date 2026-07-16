@@ -1,6 +1,6 @@
 {
   "name": "brainstorming",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A terminal group chat where Claude Code, Codex, Antigravity and Ollama collaborate in one shared conversation over your codebase.",
   "type": "module",
   "bin": {
