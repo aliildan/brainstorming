@@ -48,6 +48,9 @@ importers:
       '@brainstorming/core':
         specifier: workspace:*
         version: link:../core
+      ollama:
+        specifier: ^0.6.0
+        version: 0.6.3
 
   packages/core: {}
 
@@ -592,6 +595,9 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  ollama@0.6.3:
+    resolution: {integrity: sha512-KEWEhIqE5wtfzEIZbDCLH51VFZ6Z3ZSa6sIOg/E/tBV8S51flyqBOXi+bRxlOYKDf8i327zG9eSTb8IJxvm3Zg==}
+
   onetime@5.1.2:
     resolution: {integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==}
     engines: {node: '>=6'}
@@ -798,6 +804,9 @@ packages:
         optional: true
       jsdom:
         optional: true
+
+  whatwg-fetch@3.6.20:
+    resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
 
   why-is-node-running@2.3.0:
     resolution: {integrity: sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w==}
@@ -1213,6 +1222,10 @@ snapshots:
 
   nanoid@3.3.16: {}
 
+  ollama@0.6.3:
+    dependencies:
+      whatwg-fetch: 3.6.20
+
   onetime@5.1.2:
     dependencies:
       mimic-fn: 2.1.0
@@ -1423,6 +1436,8 @@ snapshots:
       - terser
       - tsx
       - yaml
+
+  whatwg-fetch@3.6.20: {}
 
   why-is-node-running@2.3.0:
     dependencies:

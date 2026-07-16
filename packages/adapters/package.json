@@ -5,6 +5,7 @@
   "type": "module",
   "exports": { ".": "./src/index.ts" },
   "dependencies": {
-    "@brainstorming/core": "workspace:*"
+    "@brainstorming/core": "workspace:*",
+    "ollama": "^0.6.0"
   }
 }
