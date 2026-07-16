@@ -8,10 +8,12 @@
     "demo": "tsx src/index.ts --demo"
   },
   "dependencies": {
+    "@brainstorming/adapters": "workspace:*",
     "@brainstorming/core": "workspace:*",
     "@brainstorming/tui": "workspace:*",
     "ink": "^6.0.0",
-    "react": "^19.0.0"
+    "react": "^19.0.0",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

@@ -13,6 +13,10 @@ describe("parseCommand", () => {
   it("parses /budget N", () => {
     expect(parseCommand("/budget 5")).toEqual({ kind: "budget", n: 5 });
   });
+  it("parses /decide with text", () => {
+    expect(parseCommand("/decide use REST not GraphQL")).toEqual({ kind: "decide", text: "use REST not GraphQL" });
+    expect(parseCommand("/decide")).toEqual({ kind: "unknown", name: "decide" });
+  });
   it("flags unknown commands", () => {
     expect(parseCommand("/wat now")).toEqual({ kind: "unknown", name: "wat" });
   });

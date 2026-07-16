@@ -23,6 +23,9 @@ importers:
 
   apps/cli:
     dependencies:
+      '@brainstorming/adapters':
+        specifier: workspace:*
+        version: link:../../packages/adapters
       '@brainstorming/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -35,6 +38,9 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.2.7
+      zod:
+        specifier: ^4.0.0
+        version: 4.4.3
     devDependencies:
       '@types/react':
         specifier: ^19.0.0

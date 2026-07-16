@@ -118,6 +118,11 @@ export class Room {
     this.#abort?.abort();
   }
 
+  /** Append a system note to the transcript (e.g. a recorded decision). */
+  note(content: string): ChatMessage {
+    return this.#append("system", content, "system", []);
+  }
+
   #emit(ev: RoomEvent): void {
     for (const fn of this.#listeners) fn(ev);
   }
@@ -189,7 +194,13 @@ export class Room {
     const cursor = this.#cursors.get(agentName) ?? 0;
     const digest = snapshot
       .slice(cursor)
-      .filter((m) => m.id !== addressed.id && m.author !== agentName);
+      .filter(
+        (m) =>
+          m.id !== addressed.id &&
+          m.author !== agentName &&
+          m.kind !== "activity" &&
+          m.kind !== "permission",
+      );
     this.#cursors.set(agentName, snapshot.length);
 
     this.#status(agentName, "thinking");
