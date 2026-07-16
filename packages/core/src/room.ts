@@ -78,6 +78,16 @@ export class Room {
     this.#roundBudget = n;
   }
 
+  /**
+   * Mark the entire current transcript as already seen by every agent.
+   * Used when resuming a room so agents receive only NEW messages as digests
+   * (their pre-resume context comes from their backend session or ctx.transcript).
+   */
+  markAllSeen(): void {
+    const n = this.#transcript.length;
+    for (const name of this.#adapters.keys()) this.#cursors.set(name, n);
+  }
+
   on(fn: (ev: RoomEvent) => void): () => void {
     this.#listeners.add(fn);
     return () => this.#listeners.delete(fn);
