@@ -18,9 +18,9 @@ and consulting each other while you steer.
 
 <div align="center">
 
-<video src="https://raw.githubusercontent.com/aliildan/brainstorming/main/demo.webm" controls muted width="760"></video>
+### 🎬 [Watch the demo →](https://github.com/aliildan/brainstorming/blob/main/demo.webm)
 
-<sub>▶️ <a href="https://github.com/aliildan/brainstorming/blob/main/demo.webm">Watch the demo</a> — four agents in one shared chat over a codebase.</sub>
+<sub>Four agents debating, delegating and editing code in one shared terminal chat.</sub>
 
 </div>
 
